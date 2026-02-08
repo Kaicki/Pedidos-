@@ -1,5 +1,5 @@
-const supabaseUrl = "SUA_URL";
-const supabaseKey = "SUA_ANON_KEY";
+const supabaseUrl = "https://psqdwlvzypgmjzxuurms.supabase.co";
+const supabaseKey = "sb_publishable__okNpjTgof7BIlDQB0YFVA_Yn8KV9ZW";
 
 const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
@@ -15,6 +15,7 @@ document.getElementById("pedidoForm").addEventListener("submit", async (e) => {
 
   if (error) {
     alert("Erro ao enviar pedido");
+    console.error(error);
   } else {
     alert("Pedido enviado com sucesso!");
     e.target.reset();
