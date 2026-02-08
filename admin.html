@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Painel Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { background:#0b0b0b; color:#fff; font-family:Arial; padding:15px; }
+    h2 { text-align:center; }
+    .pedido { background:#141414; padding:12px; border-radius:10px; margin-bottom:10px; }
+    button { margin-top:6px; margin-right:6px; padding:6px 10px; border:none; border-radius:6px; cursor:pointer; }
+  </style>
+</head>
+<body>
+
+<h2>📋 Painel de Pedidos</h2>
+<div id="lista">Carregando...</div>
+
+<script type="module">
+  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+  const supabase = createClient(
+    "https://psqdwlvzypgmjzxuurms.supabase.co",
+    "sb_publishable__okNpjTgof7BIlDQB0YFVA_Yn8KV9ZW"
+  );
+
+  async function carregar() {
+    const { data } = await supabase.from("pedidos").select("*").order("id", { ascending:false });
+    const lista = document.getElementById("lista");
+    lista.innerHTML = "";
+    if (!data || data.length===0) return lista.innerHTML="Nenhum pedido";
+    data.forEach(p => {
+      lista.innerHTML += `<div class='pedido'>
+        <b>${p.titulo}</b><br>
+        ${p.tipo} | ${p.status}<br>
+        <button onclick="status(${p.id}, 'Disponível')">Disponível</button>
+        <button onclick="status(${p.id}, 'Em produção')">Produção</button>
+        <button onclick="del(${p.id})">Excluir</button>
+      </div>`;
+    });
+  }
+
+  window.status = async (id,s)=>{
+    await supabase.from("pedidos").update({status:s}).eq("id",id);
+    carregar();
+  }
+  window.del = async id=>{
+    await supabase.from("pedidos").delete().eq("id",id);
+    carregar();
+  }
+
+  carregar();
+</script>
+
+</body>
+</html>

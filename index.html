@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Pedidos de Filmes e Séries</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { background:#0b0b0b; color:#fff; font-family:Arial; padding:20px; }
+    h2 { text-align:center; }
+    input, select, button {
+      width:100%; padding:10px; margin:10px 0;
+      border-radius:6px; border:none;
+    }
+    button { background:#00e676; font-weight:bold; cursor:pointer; }
+  </style>
+</head>
+<body>
+
+<h2>🎬 Pedido de Filme ou Série</h2>
+
+<input id="titulo" placeholder="Nome do filme ou série">
+<select id="tipo">
+  <option value="Filme">Filme</option>
+  <option value="Série">Série</option>
+</select>
+<button onclick="enviar()">Enviar Pedido</button>
+
+<script type="module">
+  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+  const supabase = createClient(
+    "https://psqdwlvzypgmjzxuurms.supabase.co",
+    "sb_publishable__okNpjTgof7BIlDQB0YFVA_Yn8KV9ZW"
+  );
+
+  async function enviar() {
+    const titulo = document.getElementById("titulo").value;
+    const tipo = document.getElementById("tipo").value;
+
+    if (!titulo) return alert("Digite o nome");
+
+    await supabase.from("pedidos").insert({
+      titulo,
+      tipo,
+      status: "Pendente"
+    });
+
+    alert("Pedido enviado!");
+    document.getElementById("titulo").value = "";
+  }
+</script>
+
+</body>
+</html>
